@@ -11,9 +11,22 @@
 
     <modules>
         <module>bigfile-server</module>
-        <module>bigfile-core</module>
         <module>bigfile-client</module>
         <module>bigfile-core</module>
+        <module>bigfile-common</module>
     </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.20</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>29.0-jre</version>
+        </dependency>
+    </dependencies>
 
 </project>
