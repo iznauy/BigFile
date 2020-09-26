@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Created on 2020-09-27.
+ * Created on 2020-09-26.
  * Description:
  *
  * @author iznauy
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChunkMetaVO {
+public class BasicChunkMetaVO {
 
     private String fileId;
 
@@ -24,10 +24,5 @@ public class ChunkMetaVO {
     private long length;
 
     private String checkSum;
-
-    /**
-     * 当前服务端存储了该文件块前多少字节的数据
-     */
-    private long size;
 
 }

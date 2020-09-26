@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MetaVO {
 
+    private String fileId;
+
     /**
      * 传输是否完成
      */

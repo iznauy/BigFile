@@ -13,20 +13,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChunkMetaVO {
+public class ChunkTransferVO {
 
     private String fileId;
 
     private long chunkId;
 
-    private long offset;
-
-    private long length;
-
-    private String checkSum;
+    /**
+     * 从当前文件块的哪个位置开始传输
+     */
+    private long begin;
 
     /**
-     * 当前服务端存储了该文件块前多少字节的数据
+     * 当前传输的数据块大小
      */
     private long size;
 
