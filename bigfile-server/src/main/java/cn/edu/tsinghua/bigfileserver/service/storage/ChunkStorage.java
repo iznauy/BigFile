@@ -12,10 +12,10 @@ public interface ChunkStorage {
 
     boolean hasExisted(String fileId, long chunkId) throws BigFileException;
 
-    byte[] readChunk(String id, long chunkId, long begin, long size) throws BigFileException;
+    byte[] readChunk(String fileId, long chunkId, long begin, long size) throws BigFileException;
 
-    boolean writeChunk(String id, byte[] chunk, long chunkId, long begin) throws BigFileException;
+    boolean writeChunk(String fileId, byte[] chunk, long chunkId, long begin) throws BigFileException;
 
-    boolean deleteChunk(String id, long chunkId) throws BigFileException;
+    boolean deleteChunk(String fileId, long chunkId) throws BigFileException;
 
 }

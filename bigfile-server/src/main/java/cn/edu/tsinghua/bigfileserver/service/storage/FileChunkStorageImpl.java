@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.bigfileserver.service.storage;
 
 import cn.edu.tsinghua.bigfileserver.exception.BigFileException;
+import cn.edu.tsinghua.bigfileserver.exception.BigFileNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,28 +42,34 @@ public class FileChunkStorageImpl implements ChunkStorage {
         logger.error("create file chunk storage baseDir " + baseDir + " failure");
     }
 
-    private File getFile(String id, long chunkId) {
-        return new File(baseDir, String.format(CHUNK_NAME_TEMPLATE, id, chunkId));
+    private File getFile(String fileId, long chunkId) {
+        return new File(baseDir, String.format(CHUNK_NAME_TEMPLATE, fileId, chunkId));
     }
 
 
     @Override
     public boolean hasExisted(String fileId, long chunkId) throws BigFileException {
-        return false;
+        File file = getFile(fileId, chunkId);
+        return file.exists();
     }
 
     @Override
-    public byte[] readChunk(String id, long chunkId, long begin, long size) throws BigFileException {
+    public byte[] readChunk(String fileId, long chunkId, long begin, long size) throws BigFileException {
+        File file = getFile(fileId, chunkId);
+        if (!file.exists()) {
+            throw new BigFileNotFoundException(fileId, chunkId);
+        }
+
         return new byte[0];
     }
 
     @Override
-    public boolean writeChunk(String id, byte[] chunk, long chunkId, long begin) throws BigFileException {
+    public boolean writeChunk(String fileId, byte[] chunk, long chunkId, long begin) throws BigFileException {
         return false;
     }
 
     @Override
-    public boolean deleteChunk(String id, long chunkId) throws BigFileException {
+    public boolean deleteChunk(String fileId, long chunkId) throws BigFileException {
         return false;
     }
 }

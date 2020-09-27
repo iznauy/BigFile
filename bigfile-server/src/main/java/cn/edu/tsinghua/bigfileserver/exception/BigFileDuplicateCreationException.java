@@ -14,7 +14,7 @@ public class BigFileDuplicateCreationException extends BigFileRuntimeException {
 
     private static final String MESSAGE_TEMPLATE = "File %s has been created.";
 
-    public BigFileDuplicateCreationException(String id) {
-        super(String.format(MESSAGE_TEMPLATE, id));
+    public BigFileDuplicateCreationException(String fileId) {
+        super(String.format(MESSAGE_TEMPLATE, fileId));
     }
 }
