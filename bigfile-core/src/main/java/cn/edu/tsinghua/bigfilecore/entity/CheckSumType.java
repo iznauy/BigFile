@@ -8,7 +8,7 @@ package cn.edu.tsinghua.bigfilecore.entity;
  */
 public enum CheckSumType {
 
-    MD5,
+    NONE,
     SHA256
 
 }

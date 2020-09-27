@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.bigfileserver.po;
 
+import cn.edu.tsinghua.bigfilecommon.vo.MetaVO;
 import cn.edu.tsinghua.bigfilecore.entity.CheckSumType;
 import cn.edu.tsinghua.bigfilecore.entity.CompressionType;
 import lombok.AllArgsConstructor;
@@ -85,4 +86,13 @@ public class MetaPO {
         this.checkSumType = checkSumType;
         this.compressionType = compressionType;
     }
+
+    public static MetaVO toVO(MetaPO po) {
+        if (po == null) {
+            return null;
+        }
+        return new MetaVO(po.fileId, po.chunkSize, po.chunksToUpload == 0,
+                po.uploadChunkMetaList, po.checkSumType, po.compressionType);
+    }
+
 }

@@ -16,7 +16,32 @@ public class CheckSumValidatorFactory {
     }
 
     public static CheckSumValidator getCheckSumValidator(CheckSumType checkSumType) {
-        return null;
+        switch (checkSumType) {
+            case NONE:
+                return NoneCheckSumValidator.getInstance();
+            default:
+                return null;
+        }
+    }
+
+    private static class NoneCheckSumValidator implements CheckSumValidator {
+
+        private static NoneCheckSumValidator instance = new NoneCheckSumValidator();
+
+        private NoneCheckSumValidator() {
+
+        }
+
+        @Override
+        public boolean checkChunk(byte[] chunkData, String checkSum) {
+            return true;
+        }
+
+        static NoneCheckSumValidator getInstance() {
+            return instance;
+        }
+
+
     }
 
 }

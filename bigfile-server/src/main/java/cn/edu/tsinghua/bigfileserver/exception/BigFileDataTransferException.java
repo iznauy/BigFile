@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author iznauy
  */
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class BigFileNotFoundException extends BigFileRuntimeException {
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+public class BigFileDataTransferException extends BigFileRuntimeException {
 
-    private static final String MESSAGE_TEMPLATE = "Chunk %d of file %s is not found.";
+    private static final String MESSAGE_TEMPLATE = "Chunk %d of file %s got error in transfer.";
 
-    public BigFileNotFoundException(String fileId, long chunkId) {
+    public BigFileDataTransferException(String fileId, long chunkId) {
         super(String.format(MESSAGE_TEMPLATE, chunkId, fileId));
     }
 

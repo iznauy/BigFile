@@ -19,6 +19,8 @@ public class MetaVO {
 
     private String fileId;
 
+    private long chunkSize;
+
     /**
      * 传输是否完成
      */
@@ -29,7 +31,6 @@ public class MetaVO {
      */
     private boolean uploadChunkMetaList;
 
-    private long chunkSize;
 
     private CheckSumType checkSumType;
 

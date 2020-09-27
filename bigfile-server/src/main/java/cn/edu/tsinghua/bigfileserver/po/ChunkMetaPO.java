@@ -1,5 +1,7 @@
 package cn.edu.tsinghua.bigfileserver.po;
 
+import cn.edu.tsinghua.bigfilecommon.vo.BasicChunkMetaVO;
+import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
 import cn.edu.tsinghua.bigfilecore.entity.ChunkMeta;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -62,5 +64,28 @@ public class ChunkMetaPO {
      */
     @Column(nullable = false)
     private long size;
+
+    public ChunkMetaPO(String fileId, long chunkId, long offset, long length, String checkSum, long size) {
+        this.fileId = fileId;
+        this.chunkId = chunkId;
+        this.offset = offset;
+        this.length = length;
+        this.checkSum = checkSum;
+        this.size = size;
+    }
+
+    public static ChunkMetaVO toVO(ChunkMetaPO po) {
+        if (po == null) {
+            return null;
+        }
+        return new ChunkMetaVO(po.fileId, po.chunkId, po.offset, po.length, po.checkSum, po.size);
+    }
+
+    public static ChunkMetaPO fromBasicVO(BasicChunkMetaVO vo) {
+        if (vo == null) {
+            return null;
+        }
+        return new ChunkMetaPO(vo.getFileId(), vo.getChunkId(), vo.getOffset(), vo.getLength(), vo.getCheckSum(), 0);
+    }
 
 }

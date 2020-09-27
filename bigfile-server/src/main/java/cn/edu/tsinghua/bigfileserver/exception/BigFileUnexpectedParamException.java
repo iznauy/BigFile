@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author iznauy
  */
-@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-public class BigFileIOException extends BigFileRuntimeException {
+@ResponseStatus(HttpStatus.BAD_REQUEST)
+public class BigFileUnexpectedParamException extends BigFileRuntimeException {
 
-    public BigFileIOException(Throwable cause) {
-        super(cause);
+    public BigFileUnexpectedParamException(String message) {
+        super(message);
     }
 }

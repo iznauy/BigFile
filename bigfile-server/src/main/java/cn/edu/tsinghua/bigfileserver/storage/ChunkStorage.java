@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.bigfileserver.service.storage;
+package cn.edu.tsinghua.bigfileserver.storage;
 
 import cn.edu.tsinghua.bigfileserver.exception.BigFileException;
 
@@ -14,7 +14,7 @@ public interface ChunkStorage {
 
     byte[] readChunk(String fileId, long chunkId, long begin, long size) throws BigFileException;
 
-    boolean writeChunk(String fileId, byte[] chunk, long chunkId, long begin) throws BigFileException;
+    int writeChunk(String fileId, byte[] chunk, long chunkId, long begin) throws BigFileException;
 
     boolean deleteChunk(String fileId, long chunkId) throws BigFileException;
 

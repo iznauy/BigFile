@@ -1,15 +1,19 @@
 package cn.edu.tsinghua.bigfileserver.controller;
 
+import cn.edu.tsinghua.bigfilecommon.vo.BasicChunkMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.BasicMetaVO;
+import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
+import cn.edu.tsinghua.bigfilecommon.vo.MetaVO;
+import cn.edu.tsinghua.bigfileserver.po.MetaPO;
 import cn.edu.tsinghua.bigfileserver.service.meta.MetaService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created on 2020-09-24.
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author iznauy
  */
+@Slf4j
 @RestController
 public class MetaController {
 
@@ -24,10 +29,33 @@ public class MetaController {
 
     private MetaService metaService;
 
-    @GetMapping("/create/file/")
+    @PostMapping("/meta/")
     @ResponseStatus(HttpStatus.CREATED)
-    public BasicMetaVO createFile(@RequestParam String id, @RequestParam long size) {
-        return metaService.createFile(id, size);
+    public BasicMetaVO createMeta(@RequestParam String fileId, @RequestParam long size) {
+        return metaService.createMeta(fileId, size);
+    }
+
+    @GetMapping("/meta/")
+    @ResponseStatus(HttpStatus.OK)
+    public MetaVO getMeta(@RequestParam String fileId) {
+        return metaService.getMeta(fileId);
+    }
+
+    @GetMapping("/chunk/meta/list/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ChunkMetaVO> getChunkMetaList(@RequestParam String fileId) {
+        return metaService.getChunkMetaList(fileId);
+    }
+
+    @GetMapping("/chunk/meta/")
+    public ChunkMetaVO getChunkMeta(@RequestParam String fileId, @RequestParam long chunkId) {
+        return metaService.getChunkMeta(fileId, chunkId);
+    }
+
+    @PostMapping("/chunk/meta/list/")
+    @ResponseStatus(HttpStatus.OK)
+    public void uploadChunkMetaList(@RequestBody List<BasicChunkMetaVO> chunkMetaVOList) {
+        metaService.uploadChunkMetaList(chunkMetaVOList);
     }
 
     @Autowired
