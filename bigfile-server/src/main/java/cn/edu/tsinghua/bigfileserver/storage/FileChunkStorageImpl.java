@@ -1,18 +1,16 @@
 package cn.edu.tsinghua.bigfileserver.storage;
 
-import cn.edu.tsinghua.bigfileserver.exception.BigFileException;
+import cn.edu.tsinghua.bigfilecommon.exception.BigFileException;
 import cn.edu.tsinghua.bigfileserver.exception.BigFileChunkDataNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
-import java.util.RandomAccess;
 
 /**
  * Created on 2020-09-26.

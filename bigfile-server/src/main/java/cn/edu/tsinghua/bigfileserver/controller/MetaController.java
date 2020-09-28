@@ -4,11 +4,8 @@ import cn.edu.tsinghua.bigfilecommon.vo.BasicChunkMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.BasicMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.MetaVO;
-import cn.edu.tsinghua.bigfileserver.po.MetaPO;
 import cn.edu.tsinghua.bigfileserver.service.meta.MetaService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +21,6 @@ import java.util.List;
 @Slf4j
 @RestController
 public class MetaController {
-
-    private static final Logger logger = LoggerFactory.getLogger(MetaController.class);
 
     private MetaService metaService;
 

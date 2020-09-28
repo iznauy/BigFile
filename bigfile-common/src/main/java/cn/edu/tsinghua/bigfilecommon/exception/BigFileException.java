@@ -1,4 +1,4 @@
-package cn.edu.tsinghua.bigfileserver.exception;
+package cn.edu.tsinghua.bigfilecommon.exception;
 
 /**
  * Created on 2020-09-26.

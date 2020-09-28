@@ -33,8 +33,13 @@ public class CheckSumValidatorFactory {
         }
 
         @Override
+        public String calculateCheckSum(byte[] chunkData) {
+            return "2333";
+        }
+
+        @Override
         public boolean checkChunk(byte[] chunkData, String checkSum) {
-            return true;
+            return checkSum.equals("2333");
         }
 
         static NoneCheckSumValidator getInstance() {

@@ -1,6 +1,6 @@
 package cn.edu.tsinghua.bigfileserver.storage;
 
-import cn.edu.tsinghua.bigfileserver.exception.BigFileException;
+import cn.edu.tsinghua.bigfilecommon.exception.BigFileException;
 
 /**
  * Created on 2020-09-26.

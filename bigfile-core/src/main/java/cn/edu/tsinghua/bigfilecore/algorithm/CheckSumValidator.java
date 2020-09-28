@@ -8,6 +8,8 @@ package cn.edu.tsinghua.bigfilecore.algorithm;
  */
 public interface CheckSumValidator {
 
+    String calculateCheckSum(byte[] chunkData);
+
     boolean checkChunk(byte[] chunkData, String checkSum);
 
 }
