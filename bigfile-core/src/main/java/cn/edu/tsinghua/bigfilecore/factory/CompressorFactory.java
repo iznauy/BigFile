@@ -28,7 +28,7 @@ public class CompressorFactory {
 
     private static class NoneCompressor implements Compressor {
 
-        private static NoneCompressor instance;
+        private static NoneCompressor instance = new NoneCompressor();
 
         private NoneCompressor() {
 

@@ -1,5 +1,6 @@
 package cn.edu.tsinghua.bigfileclient.upload;
 
+import cn.edu.tsinghua.bigfileclient.tools.FileReader;
 import cn.edu.tsinghua.bigfileclient.upload.entity.ChunkMeta;
 import cn.edu.tsinghua.bigfilecore.algorithm.CheckSumValidator;
 import cn.edu.tsinghua.bigfilecore.algorithm.Compressor;
@@ -14,6 +15,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ class FileSplitter {
             chunkMeta.setOffset(offset);
             chunkMeta.setSize(0);
 
-            byte[] chunk = readChunk(offset, span);
+            byte[] chunk = FileReader.read(file, offset, span);
             Compressor compressor = CompressorFactory.getCompressor(compressionType);
             byte[] compressedChunk = compressor.compressChunkData(chunk);
             chunkMeta.setLength(compressedChunk.length);
@@ -63,16 +65,6 @@ class FileSplitter {
         return chunkMetaList;
     }
 
-    private byte[] readChunk(long offset, long span) throws IOException {
-        RandomAccessFile bigFile = new RandomAccessFile(file, "r");
-        bigFile.seek(offset);
-        FileChannel channel = bigFile.getChannel();
-        byte[] chunk = new byte[(int)span];
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
-        int len;
 
-
-        return null;
-    }
 
 }

@@ -69,10 +69,14 @@ public class FileChunkStorageImpl implements ChunkStorage {
             channel = f.getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             int len;
-            while ((len = channel.read(buffer)) != -1) {
+            while (offset < size && (len = channel.read(buffer)) != -1) {
                 buffer.flip();
-                buffer.get(data, offset, len);
-                offset += len;
+                int span = len;
+                if (span > size - offset) {
+                    span = (int)(size - offset);
+                }
+                buffer.get(data, offset, span);
+                offset += span;
                 buffer.clear();
             }
         } catch (IOException e) {
@@ -97,6 +101,7 @@ public class FileChunkStorageImpl implements ChunkStorage {
 
     @Override
     public int writeChunk(String fileId, byte[] chunk, long chunkId, long begin) throws BigFileException {
+        log.info("写 chunk: {}-{}-{}-{}", fileId, chunkId, begin, chunk.length);
         File file = getFile(fileId, chunkId);
         try {
             if (!file.exists()) {

@@ -20,9 +20,9 @@ public class OkHttpUtils {
 
     static {
         client = new OkHttpClient.Builder()
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(100, TimeUnit.SECONDS)
+                .readTimeout(100, TimeUnit.SECONDS)
+                .writeTimeout(100, TimeUnit.SECONDS)
                 .build();
     }
 
@@ -30,7 +30,14 @@ public class OkHttpUtils {
 
     }
 
-    public static Response get(String url, Map<String, String> queryParams) throws IOException {
+    public static OkHttpResponse get(String url, Map<String, String> queryParams) throws IOException {
+        Response response = getRaw(url, queryParams);
+        OkHttpResponse resp = new OkHttpResponse(response);
+        response.close();
+        return resp;
+    }
+
+    public static Response getRaw(String url, Map<String, String> queryParams) throws IOException {
         final HttpUrl.Builder urlBuilder = HttpUrl.parse(url)
                 .newBuilder();
         if (queryParams != null) {
@@ -42,21 +49,25 @@ public class OkHttpUtils {
         return client.newCall(request).execute();
     }
 
-    public static Response post(String url, Map<String, String> queryParams) throws IOException {
+    public static OkHttpResponse post(String url, Map<String, String> queryParams) throws IOException {
         return post(url, queryParams, new byte[0]);
     }
 
-    public static Response post(String url, String json) throws IOException {
+    public static OkHttpResponse post(String url, String json) throws IOException {
         System.out.println(json);
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
                 .build();
-        return client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        OkHttpResponse resp = new OkHttpResponse(response);
+        response.close();
+        return resp;
     }
 
-    public static Response post(String url, Map<String, String> queryParams, byte[] body) throws IOException {
+    public static OkHttpResponse post(String url, Map<String, String> queryParams, byte[] body) throws IOException {
+        System.out.println(url);
         final HttpUrl.Builder urlBuilder = HttpUrl.parse(url)
                 .newBuilder();
         if (queryParams != null) {
@@ -67,7 +78,10 @@ public class OkHttpUtils {
                 .url(urlBuilder.build())
                 .post(requestBody)
                 .build();
-        return client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        OkHttpResponse resp = new OkHttpResponse(response);
+        response.close();
+        return resp;
     }
 
 }

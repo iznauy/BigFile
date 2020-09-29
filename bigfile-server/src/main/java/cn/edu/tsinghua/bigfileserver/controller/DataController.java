@@ -37,16 +37,18 @@ public class DataController {
                             @RequestParam long begin, @RequestParam long size,
                             HttpServletRequest request) {
         byte[] data = new byte[(int)size];
-        int length = 0;
+        int length = 0, offset = 0;
         try (BufferedInputStream is = new BufferedInputStream(request.getInputStream())) {
-            length = is.read(data);
-        } catch (IOException e) {
+            while (offset < size && (length = is.read(data, offset, (int)(size - offset))) != -1) {
+                offset += length;
+            }
+        } catch (Exception e) {
             log.error("uploadChunk error: {}", e.getMessage());
             throw new BigFileIOException(e);
         }
-        if (size != length) {
-            log.warn("length != size: length={}, size={}", length, size);
-            size = length;
+        if (offset != size) {
+            log.warn("offset != size: offset={}, size={}", offset, size);
+            size = offset;
         }
         ChunkTransferVO transferVO = new ChunkTransferVO(fileId, chunkId, begin, size);
         dataService.uploadChunkData(transferVO, data);

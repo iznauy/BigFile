@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  *
  * @author iznauy
  */
-@ResponseStatus(HttpStatus.BAD_REQUEST)
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class BigFileChunkNotExistException extends BigFileRuntimeException {
 
     private static final String MESSAGE_TEMPLATE = "Chunk %d of file %s is not exists.";

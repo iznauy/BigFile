@@ -22,7 +22,11 @@ import java.util.stream.Collectors;
  */
 @Data
 @NoArgsConstructor
-public class UploadStatus {
+public class UploadContext {
+
+    private String ip;
+
+    private int port;
 
     private String fileId;
 
@@ -38,12 +42,9 @@ public class UploadStatus {
 
     private Stack<UploadChunkTask> uploadChunkTasks;
 
-    public UploadStatus(String fileId, File file) {
-        this.fileId = fileId;
-        this.file = file;
-        this.meta = new Meta();
-        this.chunkMetaList = new ArrayList<>();
-        this.uploadChunkTasks = new Stack<>();
+    public UploadContext(String ip, int port) {
+        this.ip = ip;
+        this.port = port;
     }
 
     public void clear() {
@@ -92,6 +93,10 @@ public class UploadStatus {
 
     public void addUploadTask(UploadChunkTask task) {
         this.uploadChunkTasks.add(task);
+    }
+
+    public boolean hasMoreUploadTask() {
+        return !uploadChunkTasks.empty();
     }
 
 }
