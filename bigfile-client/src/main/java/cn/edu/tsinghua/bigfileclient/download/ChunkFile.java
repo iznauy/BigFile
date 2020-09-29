@@ -35,6 +35,12 @@ public class ChunkFile {
         return chunkFile.exists();
     }
 
+    public boolean delete() {
+        if (chunkFile.exists()) {
+            return chunkFile.delete();
+        }
+        return true;
+    }
 
     public byte[] read() throws IOException {
         return FileReader.read(chunkFile, 0, chunkFile.length());

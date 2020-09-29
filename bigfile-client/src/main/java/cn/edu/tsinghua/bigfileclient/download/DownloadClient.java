@@ -61,20 +61,17 @@ public class DownloadClient {
     public boolean downloadFile(String fileId, File baseDir, String targetName) throws IOException, BigFileException {
         this.checkFile(baseDir, targetName);
         this.initContext(fileId, baseDir, targetName);
-        // 加载元信息
-        logger.info("加载元信息");
         loadMeta();
         if (!this.context.isUploadFinished()) {
             throw new BigFileException("file hasn't upload finished");
         }
-        logger.info("读取 chunk meta 列表");
+        if (this.context.isDownloadFinished()) {
+            return true;
+        }
         loadChunkMetaList();
-        logger.info("恢复下载进度");
         restoreDownload();
         if (!context.isDownloadFinished()) {
-            logger.info("生成下载任务列表");
             generateDownloadTasks();
-            logger.info("下载");
             downloadChunks();
         }
         return mergeChunks();
@@ -111,7 +108,6 @@ public class DownloadClient {
         File baseDir = this.context.getBaseDir();
         List<ChunkMeta> chunkMetaList = this.context.getChunkMetaList();
         for (ChunkMeta chunkMeta: chunkMetaList) {
-            logger.info(chunkMeta.toString());
             ChunkFile chunkFile = new ChunkFile(baseDir, this.context.getFileId(), chunkMeta.getChunkId());
             if (!chunkFile.exists()) {
                 continue;

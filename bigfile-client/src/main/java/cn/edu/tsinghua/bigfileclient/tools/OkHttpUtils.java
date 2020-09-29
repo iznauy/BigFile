@@ -54,7 +54,6 @@ public class OkHttpUtils {
     }
 
     public static OkHttpResponse post(String url, String json) throws IOException {
-        System.out.println(json);
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         Request request = new Request.Builder()
                 .url(url)
@@ -67,7 +66,6 @@ public class OkHttpUtils {
     }
 
     public static OkHttpResponse post(String url, Map<String, String> queryParams, byte[] body) throws IOException {
-        System.out.println(url);
         final HttpUrl.Builder urlBuilder = HttpUrl.parse(url)
                 .newBuilder();
         if (queryParams != null) {

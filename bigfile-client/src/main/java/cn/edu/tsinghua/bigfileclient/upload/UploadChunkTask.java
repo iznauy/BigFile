@@ -37,7 +37,6 @@ public class UploadChunkTask implements Runnable {
 
     @Override
     public void run() {
-        logger.info("上传文件:" + context.getChunkMeta());
         int retry = 0;
         do {
             File file = context.getFile();
@@ -54,7 +53,6 @@ public class UploadChunkTask implements Runnable {
                 queryParams.put("size", String.valueOf(compressedChunk.length));
 
                 OkHttpResponse response = OkHttpUtils.post(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams, compressedChunk);
-                System.out.println(response);
                 if (response.getCode() == 400 && reloadChunkMeta()) {
                     // 重新读取 chunk meta
                     retry += 1;

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Created on 2020-09-27.
@@ -36,10 +35,10 @@ public class DataController {
     public void uploadChunk(@RequestParam String fileId, @RequestParam long chunkId,
                             @RequestParam long begin, @RequestParam long size,
                             HttpServletRequest request) {
-        byte[] data = new byte[(int)size];
+        byte[] data = new byte[(int) size];
         int length = 0, offset = 0;
         try (BufferedInputStream is = new BufferedInputStream(request.getInputStream())) {
-            while (offset < size && (length = is.read(data, offset, (int)(size - offset))) != -1) {
+            while (offset < size && (length = is.read(data, offset, (int) (size - offset))) != -1) {
                 offset += length;
             }
         } catch (Exception e) {
@@ -61,14 +60,14 @@ public class DataController {
                          HttpServletResponse response) {
         ChunkTransferVO transferVO = new ChunkTransferVO(fileId, chunkId, begin, size);
         byte[] data = dataService.getChunkData(transferVO);
-        try (BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream())) {
+        try {
+            BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream());
             os.write(data);
             os.flush();
         } catch (IOException e) {
             log.error("getChunk error: {}", e.getMessage());
             throw new BigFileIOException(e);
         }
-
     }
 
     @Autowired

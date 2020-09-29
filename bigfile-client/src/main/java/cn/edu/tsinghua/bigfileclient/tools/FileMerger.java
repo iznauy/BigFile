@@ -11,6 +11,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,7 @@ public class FileMerger {
                 return false;
             }
         }
+        List<ChunkFile> chunkFileList = new ArrayList<>();
         try (BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(target))) {
             for (int i = 0; i < chunkMetaMap.size(); i++) {
                 ChunkMeta chunkMeta = chunkMetaMap.get((long)i);
@@ -55,6 +57,7 @@ public class FileMerger {
                     throw new BigFileException("uncompleted chunk meta list");
                 }
                 ChunkFile chunkFile = new ChunkFile(baseDir, fileId, chunkMeta.getChunkId());
+                chunkFileList.add(chunkFile);
                 byte[] chunkData = chunkFile.read();
                 Compressor compressor = CompressorFactory.getCompressor(compressionType);
                 byte[] uncompressedChunkData = compressor.decompressChunkData(chunkData);
@@ -62,6 +65,7 @@ public class FileMerger {
                 out.flush();
             }
         }
+        chunkFileList.forEach(ChunkFile::delete);
         return true;
     }
 

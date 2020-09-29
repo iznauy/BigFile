@@ -91,7 +91,7 @@ public class MetaPO {
         if (po == null) {
             return null;
         }
-        return new MetaVO(po.fileId, po.chunkSize, po.chunksToUpload == 0,
+        return new MetaVO(po.fileId, po.size, po.chunkSize, po.chunksToUpload == 0,
                 po.uploadChunkMetaList, po.checkSumType, po.compressionType);
     }
 

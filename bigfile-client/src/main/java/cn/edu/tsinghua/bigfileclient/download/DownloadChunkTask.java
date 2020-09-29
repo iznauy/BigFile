@@ -7,6 +7,7 @@ import cn.edu.tsinghua.bigfileclient.tools.OkHttpUtils;
 import cn.edu.tsinghua.bigfilecore.algorithm.CheckSumValidator;
 import cn.edu.tsinghua.bigfilecore.factory.CheckSumValidatorFactory;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class DownloadChunkTask implements Runnable {
                 queryParams.put("begin", String.valueOf(context.getCurrentChunkSize()));
                 queryParams.put("size", String.valueOf(context.getChunkSize() - context.getCurrentChunkSize()));
 
-                Response response = OkHttpUtils.getRaw(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkMeta), queryParams);
+                Response response = OkHttpUtils.getRaw(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams);
                 if (response.code() == 404) {
                     // 这种情况应该不会出现
                     break;

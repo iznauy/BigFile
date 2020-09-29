@@ -69,6 +69,11 @@ public class DownloadContext {
         this.meta.setCheckSumType(metaVO.getCheckSumType());
         this.meta.setCompressionType(metaVO.getCompressionType());
         this.uploadFinished = metaVO.isUploadFinished();
+
+        File target = new File(baseDir, targetName);
+        if (target.length() == metaVO.getSize()) {
+            this.downloadFinished = true;
+        }
     }
 
     public void update(List<ChunkMetaVO> chunkMetaVOList) {

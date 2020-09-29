@@ -19,6 +19,8 @@ public class MetaVO {
 
     private String fileId;
 
+    private long size;
+
     private long chunkSize;
 
     /**
