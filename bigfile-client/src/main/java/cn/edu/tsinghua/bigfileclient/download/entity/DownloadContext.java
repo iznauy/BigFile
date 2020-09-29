@@ -37,11 +37,11 @@ public class DownloadContext {
 
     private boolean downloadFinished;
 
-    private Meta meta;
+    private Meta meta = new Meta();
 
-    private List<ChunkMeta> chunkMetaList;
+    private List<ChunkMeta> chunkMetaList = new ArrayList<>();
 
-    private Stack<DownloadChunkTask> downloadChunkTasks;
+    private Stack<DownloadChunkTask> downloadChunkTasks = new Stack<>();
 
     public DownloadContext(String ip, int port) {
         this.ip = ip;
@@ -72,7 +72,7 @@ public class DownloadContext {
     }
 
     public void update(List<ChunkMetaVO> chunkMetaVOList) {
-
+        chunkMetaVOList.forEach(e -> chunkMetaList.add(ChunkMeta.fromVO(e)));
     }
 
     public DownloadChunkTask acquireDownloadTask() {

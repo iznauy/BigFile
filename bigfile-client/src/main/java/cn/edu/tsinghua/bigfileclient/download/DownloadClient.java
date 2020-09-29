@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created on 2020-09-27.
@@ -29,6 +30,8 @@ import java.util.Map;
  * @author iznauy
  */
 public class DownloadClient {
+
+    private static final Logger logger = Logger.getLogger(DownloadClient.class.getName());
 
     private DownloadContext context;
 
@@ -59,14 +62,19 @@ public class DownloadClient {
         this.checkFile(baseDir, targetName);
         this.initContext(fileId, baseDir, targetName);
         // 加载元信息
+        logger.info("加载元信息");
         loadMeta();
         if (!this.context.isUploadFinished()) {
             throw new BigFileException("file hasn't upload finished");
         }
+        logger.info("读取 chunk meta 列表");
         loadChunkMetaList();
+        logger.info("恢复下载进度");
         restoreDownload();
         if (!context.isDownloadFinished()) {
+            logger.info("生成下载任务列表");
             generateDownloadTasks();
+            logger.info("下载");
             downloadChunks();
         }
         return mergeChunks();
@@ -103,6 +111,7 @@ public class DownloadClient {
         File baseDir = this.context.getBaseDir();
         List<ChunkMeta> chunkMetaList = this.context.getChunkMetaList();
         for (ChunkMeta chunkMeta: chunkMetaList) {
+            logger.info(chunkMeta.toString());
             ChunkFile chunkFile = new ChunkFile(baseDir, this.context.getFileId(), chunkMeta.getChunkId());
             if (!chunkFile.exists()) {
                 continue;
