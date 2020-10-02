@@ -7,4 +7,9 @@ package cn.edu.tsinghua.bigfilecore.algorithm;
  * @author iznauy
  */
 public interface RateLimiter {
+
+    boolean acquire(int count);
+
+    boolean tryAcquire(int count, long timeout);
+
 }

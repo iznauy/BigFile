@@ -9,6 +9,7 @@ package cn.edu.tsinghua.bigfilecore.entity;
 public enum CheckSumType {
 
     NONE,
+    MD5,
     SHA256
 
 }

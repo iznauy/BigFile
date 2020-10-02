@@ -2,6 +2,8 @@ package cn.edu.tsinghua.bigfileserver.controller;
 
 import cn.edu.tsinghua.bigfilecommon.vo.ChunkTransferVO;
 import cn.edu.tsinghua.bigfileserver.exception.BigFileIOException;
+import cn.edu.tsinghua.bigfileserver.service.concurrent.ConcurrentControlService;
+import cn.edu.tsinghua.bigfileserver.service.concurrent.ServerInfoService;
 import cn.edu.tsinghua.bigfileserver.service.data.DataService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,10 @@ import java.io.IOException;
 public class DataController {
 
     private DataService dataService;
+
+    private ConcurrentControlService concurrentControlService;
+
+    private ServerInfoService serverInfoService;
 
     @PostMapping("/chunk/data/")
     @ResponseStatus(HttpStatus.OK)
@@ -73,5 +79,15 @@ public class DataController {
     @Autowired
     public void setDataService(DataService dataService) {
         this.dataService = dataService;
+    }
+
+    @Autowired
+    public void setConcurrentControlService(ConcurrentControlService concurrentControlService) {
+        this.concurrentControlService = concurrentControlService;
+    }
+
+    @Autowired
+    public void setServerInfoService(ServerInfoService serverInfoService) {
+        this.serverInfoService = serverInfoService;
     }
 }

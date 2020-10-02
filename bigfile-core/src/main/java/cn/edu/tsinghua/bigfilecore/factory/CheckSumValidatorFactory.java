@@ -1,6 +1,8 @@
 package cn.edu.tsinghua.bigfilecore.factory;
 
 import cn.edu.tsinghua.bigfilecore.algorithm.CheckSumValidator;
+import cn.edu.tsinghua.bigfilecore.algorithm.impl.MD5CheckSumValidator;
+import cn.edu.tsinghua.bigfilecore.algorithm.impl.SHA256CheckSumValidator;
 import cn.edu.tsinghua.bigfilecore.entity.CheckSumType;
 
 /**
@@ -19,6 +21,10 @@ public class CheckSumValidatorFactory {
         switch (checkSumType) {
             case NONE:
                 return NoneCheckSumValidator.getInstance();
+            case MD5:
+                return MD5CheckSumValidator.getInstance();
+            case SHA256:
+                return SHA256CheckSumValidator.getInstance();
             default:
                 return null;
         }

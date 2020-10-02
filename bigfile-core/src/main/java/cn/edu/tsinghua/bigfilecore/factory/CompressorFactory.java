@@ -1,6 +1,7 @@
 package cn.edu.tsinghua.bigfilecore.factory;
 
 import cn.edu.tsinghua.bigfilecore.algorithm.Compressor;
+import cn.edu.tsinghua.bigfilecore.algorithm.impl.SnappyCompressor;
 import cn.edu.tsinghua.bigfilecore.entity.CompressionType;
 
 import java.util.Arrays;
@@ -21,6 +22,8 @@ public class CompressorFactory {
         switch (compressionType) {
             case NONE:
                 return NoneCompressor.getInstance();
+            case SNAPPY:
+                return SnappyCompressor.getInstance();
             default:
                 return null;
         }
