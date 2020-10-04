@@ -2,7 +2,6 @@ package cn.edu.tsinghua.bigfileserver.po;
 
 import cn.edu.tsinghua.bigfilecommon.vo.BasicChunkMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
-import cn.edu.tsinghua.bigfilecore.entity.ChunkMeta;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

@@ -1,6 +1,5 @@
 package cn.edu.tsinghua.bigfileserver.dao.daoImpl;
 
-import cn.edu.tsinghua.bigfilecore.entity.ChunkMeta;
 import cn.edu.tsinghua.bigfileserver.po.ChunkMetaPO;
 import org.springframework.data.repository.CrudRepository;
 

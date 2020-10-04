@@ -12,4 +12,6 @@ public interface RateLimiter {
 
     boolean tryAcquire(int count, long timeout);
 
+    void resetRate(long rate);
+
 }

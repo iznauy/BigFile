@@ -43,6 +43,8 @@ public class DownloadContext {
 
     private Stack<DownloadChunkTask> downloadChunkTasks = new Stack<>();
 
+    private int concurrency;
+
     public DownloadContext(String ip, int port) {
         this.ip = ip;
         this.port = port;

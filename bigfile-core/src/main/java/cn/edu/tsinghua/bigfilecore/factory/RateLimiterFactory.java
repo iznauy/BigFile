@@ -17,7 +17,7 @@ public class RateLimiterFactory {
 
     }
 
-    public static RateLimiter getRateLimiter(int speed) {
+    public static RateLimiter getRateLimiter(long speed) {
         return new RateLimiterImpl(speed);
     }
 

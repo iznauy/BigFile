@@ -27,43 +27,64 @@ import java.util.logging.Logger;
  */
 public class UploadChunkTask implements Runnable {
 
-    private static Logger logger = Logger.getLogger(UploadChunkTask.class.getName());
+    private boolean success;
+
+    private int retry = 0;
+
+    private Callback callback;
 
     private UploadChunkContext context;
 
     public UploadChunkTask(UploadChunkContext context) {
+        this.success = false;
+        this.retry = 0;
+        this.callback = null;
         this.context = context;
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public int getRetry() {
+        return retry;
     }
 
     @Override
     public void run() {
-        int retry = 0;
-        do {
-            File file = context.getFile();
-            long offset = context.getOffset(), length = context.getLength();
-            try {
-                byte[] chunk = FileReader.read(file, offset, length);
-                Compressor compressor = CompressorFactory.getCompressor(context.getCompressionType());
-                byte[] compressedChunk = compressor.compressChunkData(chunk);
+        retry += 1;
+        success = false;
 
-                Map<String, String> queryParams = new HashMap<>();
-                queryParams.put("fileId", context.getFileId());
-                queryParams.put("chunkId", String.valueOf(context.getChunkId()));
-                queryParams.put("begin", String.valueOf(context.getBegin()));
-                queryParams.put("size", String.valueOf(compressedChunk.length));
+        File file = context.getFile();
+        long offset = context.getOffset(), length = context.getLength();
+        try {
+            byte[] chunk = FileReader.read(file, offset, length);
+            Compressor compressor = CompressorFactory.getCompressor(context.getCompressionType());
+            byte[] compressedChunk = compressor.compressChunkData(chunk);
 
-                OkHttpResponse response = OkHttpUtils.post(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams, compressedChunk);
-                if (response.getCode() == 400 && reloadChunkMeta()) {
-                    // 重新读取 chunk meta
-                    retry += 1;
-                } else {
-                    break;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                break;
+            Map<String, String> queryParams = new HashMap<>();
+            queryParams.put("fileId", context.getFileId());
+            queryParams.put("chunkId", String.valueOf(context.getChunkId()));
+            queryParams.put("begin", String.valueOf(context.getBegin()));
+            queryParams.put("size", String.valueOf(compressedChunk.length));
+
+            OkHttpResponse response = OkHttpUtils.post(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams, compressedChunk);
+
+            if (response.getCode() / 100 == 2) {
+                success = true;
+            } else {
+                reloadChunkMeta();
             }
-        } while (retry < 5);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (callback != null) {
+            callback.execute(this);
+        }
     }
 
     private boolean reloadChunkMeta() throws IOException {
@@ -77,6 +98,12 @@ public class UploadChunkTask implements Runnable {
         ChunkMetaVO chunkMetaVO = JsonTool.getGson().fromJson(response.getBody(), ChunkMetaVO.class);
         context.updateChunkMeta(chunkMetaVO);
         return true;
+    }
+
+    public interface Callback {
+
+        void execute(UploadChunkTask task);
+
     }
 
 }

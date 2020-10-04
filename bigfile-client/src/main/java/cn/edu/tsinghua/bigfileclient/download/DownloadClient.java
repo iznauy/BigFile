@@ -7,6 +7,8 @@ import cn.edu.tsinghua.bigfileclient.download.entity.DownloadContext;
 import cn.edu.tsinghua.bigfileclient.tools.FileMerger;
 import cn.edu.tsinghua.bigfileclient.tools.OkHttpResponse;
 import cn.edu.tsinghua.bigfileclient.tools.OkHttpUtils;
+import cn.edu.tsinghua.bigfileclient.upload.UploadChunkTask;
+import cn.edu.tsinghua.bigfileclient.upload.UploadClient;
 import cn.edu.tsinghua.bigfilecommon.exception.BigFileException;
 import cn.edu.tsinghua.bigfilecommon.tools.JsonTool;
 import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 
 /**
@@ -72,6 +75,7 @@ public class DownloadClient {
         restoreDownload();
         if (!context.isDownloadFinished()) {
             generateDownloadTasks();
+            queryConcurrency(true);
             downloadChunks();
         }
         return mergeChunks();
@@ -147,7 +151,44 @@ public class DownloadClient {
         }
     }
 
-    private void downloadChunks() {
+    private void queryConcurrency(boolean allocate) throws IOException, BigFileException {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("fileId", this.context.getFileId());
+        queryParams.put("allocate", Boolean.toString(allocate));
+        OkHttpResponse response = OkHttpUtils.get(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ConcurrentDownloadControl),
+                queryParams);
+        if (response.getCode() / 100 != 2 || response.getBody() == null) {
+            throw new BigFileException("unexpected server error");
+        }
+        int concurrency = Integer.valueOf(response.getBody());
+        this.context.setConcurrency(concurrency);
+    }
+
+    private void downloadChunks() throws BigFileException {
+        try {
+            while (this.context.hasMoreDownloadTask()) {
+                CountDownLatch latch = new CountDownLatch(this.context.getConcurrency());
+                for (int i = 0; i < this.context.getConcurrency(); i++) {
+                    if (this.context.hasMoreDownloadTask()) {
+                        DownloadChunkTask task = this.context.acquireDownloadTask();
+                        task.setCallback(task1 -> {
+                            if (!task1.isSuccess() && task1.getRetry() < 5) {
+                                // 加入队列重新执行
+                                DownloadClient.this.context.addDownloadChunkTask(task1);
+                            }
+                            latch.countDown();
+                        });
+                        new Thread(task).start();
+                    } else {
+                        latch.countDown();
+                    }
+                }
+                latch.await();
+                queryConcurrency(false);
+            }
+        } catch (Exception e) {
+            throw new BigFileException(e);
+        }
         while (this.context.hasMoreDownloadTask()) {
             DownloadChunkTask task = this.context.acquireDownloadTask();
             task.run();

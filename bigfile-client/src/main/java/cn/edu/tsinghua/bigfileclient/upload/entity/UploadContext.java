@@ -42,6 +42,8 @@ public class UploadContext {
 
     private Stack<UploadChunkTask> uploadChunkTasks;
 
+    private int concurrency;
+
     public UploadContext(String ip, int port) {
         this.ip = ip;
         this.port = port;

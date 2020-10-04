@@ -14,7 +14,7 @@ public class RateLimiterImpl implements RateLimiter {
 
     private com.google.common.util.concurrent.RateLimiter rateLimiter;
 
-    public RateLimiterImpl(int rate) {
+    public RateLimiterImpl(long rate) {
         this.rateLimiter = com.google.common.util.concurrent.RateLimiter.create(rate);
     }
 
@@ -26,7 +26,11 @@ public class RateLimiterImpl implements RateLimiter {
 
     @Override
     public boolean tryAcquire(int count, long timeout) {
-
         return this.rateLimiter.tryAcquire(count, timeout, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void resetRate(long rate) {
+        this.rateLimiter = com.google.common.util.concurrent.RateLimiter.create(rate);
     }
 }

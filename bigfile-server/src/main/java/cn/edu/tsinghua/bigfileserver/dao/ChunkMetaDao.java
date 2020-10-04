@@ -1,6 +1,5 @@
 package cn.edu.tsinghua.bigfileserver.dao;
 
-import cn.edu.tsinghua.bigfilecore.entity.ChunkMeta;
 import cn.edu.tsinghua.bigfileserver.po.ChunkMetaPO;
 
 import java.util.Collection;

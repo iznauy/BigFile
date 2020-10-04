@@ -14,10 +14,20 @@ public interface ConcurrentControlService {
 
     RateLimiter getGlobalDownloadRateLimiter();
 
-    RateLimiter getLocalUploadRateLimiter();
+    void startDownload(String fileId);
 
-    RateLimiter getLocalDownloadRateLimiter();
+    void startUpload(String fileId);
 
+    void endDownload(String fileId);
 
+    void endUpload(String fileId);
+
+    int allocateDownloadThreads(String fileId);
+
+    int allocateUploadThreads(String fileId);
+
+    int getAllowedDownloadThreads(String fileId);
+
+    int getAllowedUploadThreads(String fileId);
 
 }

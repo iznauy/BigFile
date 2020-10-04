@@ -20,4 +20,8 @@ public class Constants {
 
     public static final String ChunkData = "/chunk/data/";
 
+    public static final String ConcurrentDownloadControl = "/concurrent/download/";
+
+    public static final String ConcurrentUploadControl = "/concurrent/upload/";
+
 }

@@ -13,6 +13,7 @@ import cn.edu.tsinghua.bigfilecommon.vo.BasicMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.ChunkMetaVO;
 import cn.edu.tsinghua.bigfilecommon.vo.MetaVO;
 import com.google.gson.reflect.TypeToken;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -76,6 +78,8 @@ public class UploadClient {
         }
         // 生成要传输的任务列表
         generateUploadTasks();
+        // 询问并发程度
+        queryConcurrency(true);
         // 上传文件
         uploadChunks();
         return true;
@@ -157,10 +161,43 @@ public class UploadClient {
         }
     }
 
-    private void uploadChunks() {
-        while (this.context.hasMoreUploadTask()) {
-            UploadChunkTask task = this.context.acquireUploadTask();
-            task.run();
+    private void queryConcurrency(boolean allocate) throws IOException, BigFileException {
+        Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("fileId", this.context.getFileId());
+        queryParams.put("allocate", Boolean.toString(allocate));
+        OkHttpResponse response = OkHttpUtils.get(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ConcurrentUploadControl),
+                queryParams);
+        if (response.getCode() / 100 != 2 || response.getBody() == null) {
+            throw new BigFileException("unexpected server error");
+        }
+        int concurrency = Integer.valueOf(response.getBody());
+        this.context.setConcurrency(concurrency);
+    }
+
+    private void uploadChunks() throws BigFileException {
+        try {
+            while (this.context.hasMoreUploadTask()) {
+                CountDownLatch latch = new CountDownLatch(this.context.getConcurrency());
+                for (int i = 0; i < this.context.getConcurrency(); i++) {
+                    if (this.context.hasMoreUploadTask()) {
+                        UploadChunkTask task = this.context.acquireUploadTask();
+                        task.setCallback(task1 -> {
+                            if (!task1.isSuccess() && task1.getRetry() < 5) {
+                                // 加入队列重新执行
+                                UploadClient.this.context.addUploadTask(task1);
+                            }
+                            latch.countDown();
+                        });
+                        new Thread(task).start();
+                    } else {
+                        latch.countDown();
+                    }
+                }
+                latch.await();
+                queryConcurrency(false);
+            }
+        } catch (Exception e) {
+            throw new BigFileException(e);
         }
     }
 

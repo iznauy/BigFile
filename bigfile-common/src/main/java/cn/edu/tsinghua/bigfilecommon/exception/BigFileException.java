@@ -15,4 +15,7 @@ public class BigFileException extends Exception {
         super(message);
     }
 
+    public BigFileException(Throwable cause) {
+        super(cause);
+    }
 }
