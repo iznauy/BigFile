@@ -14,4 +14,6 @@ public interface MetaDao {
 
     MetaPO getMetaByFileId(String fileId);
 
+    void decreaseChunkToUpload(String fileId);
+
 }

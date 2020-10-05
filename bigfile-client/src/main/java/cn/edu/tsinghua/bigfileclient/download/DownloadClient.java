@@ -90,7 +90,11 @@ public class DownloadClient {
             throw new BigFileException("unexpected server error");
         }
         String json = response.getBody();
+        System.out.println(json);
         MetaVO metaVO = JsonTool.getGson().fromJson(json, MetaVO.class);
+        if (metaVO == null) {
+            throw new BigFileException("下载的目标文件不存在！");
+        }
         this.context.update(metaVO);
     }
 

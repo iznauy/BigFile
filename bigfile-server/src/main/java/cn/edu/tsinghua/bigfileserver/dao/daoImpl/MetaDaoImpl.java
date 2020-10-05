@@ -26,6 +26,11 @@ public class MetaDaoImpl implements MetaDao {
         return metaRepository.findFirstByFileId(fileId);
     }
 
+    @Override
+    public void decreaseChunkToUpload(String fileId) {
+        metaRepository.decreaseChunkToUpload(fileId);
+    }
+
     @Autowired
     public void setMetaRepository(MetaRepository metaRepository) {
         this.metaRepository = metaRepository;
