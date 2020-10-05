@@ -16,14 +16,14 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws Exception {
- //       upload();
- //       System.out.println("上传结束");
+        upload();
+        System.out.println("上传结束");
         download();
     }
 
     private static void upload() throws Exception {
         UploadClient client = new UploadClient("127.0.0.1", 8001);
-        client.uploadFile("1004", new File("/Users/iznauy/test.bin"));
+        client.uploadFile("1005", new File("/Users/iznauy/test.bin"));
     }
 
     private static void download() throws Exception {

@@ -77,12 +77,12 @@ public class DataController {
             BufferedOutputStream os = new BufferedOutputStream(response.getOutputStream(), BlockSize);
             int blockSize;
             int offset = 0, length = data.length;
-            do {
+            while (offset < length) {
                 blockSize = Math.min(BlockSize, length - offset);
                 rateLimiter.acquire(blockSize);
                 os.write(data, offset, blockSize);
                 offset += blockSize;
-            } while (offset < length);
+            }
             os.flush();
         } catch (IOException e) {
             log.error("getChunk error: {}", e.getMessage());

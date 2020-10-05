@@ -90,7 +90,6 @@ public class DownloadClient {
             throw new BigFileException("unexpected server error");
         }
         String json = response.getBody();
-        System.out.println(json);
         MetaVO metaVO = JsonTool.getGson().fromJson(json, MetaVO.class);
         if (metaVO == null) {
             throw new BigFileException("下载的目标文件不存在！");
@@ -129,7 +128,7 @@ public class DownloadClient {
                     chunkFile.clear();
                 }
             }
-            chunkMeta.setLength(chunkFile.length());
+            chunkMeta.setSize(chunkFile.length());
         }
     }
 
@@ -169,6 +168,7 @@ public class DownloadClient {
     }
 
     private void downloadChunks() throws BigFileException {
+        System.out.println("开始下载数据");
         try {
             while (this.context.hasMoreDownloadTask()) {
                 CountDownLatch latch = new CountDownLatch(this.context.getConcurrency());
