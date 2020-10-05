@@ -82,6 +82,7 @@ public class DownloadChunkTask implements Runnable {
                     }
                 }
             }
+            response.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

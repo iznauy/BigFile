@@ -15,6 +15,7 @@ import okhttp3.Response;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -70,9 +71,10 @@ public class UploadChunkTask implements Runnable {
             queryParams.put("fileId", context.getFileId());
             queryParams.put("chunkId", String.valueOf(context.getChunkId()));
             queryParams.put("begin", String.valueOf(context.getBegin()));
-            queryParams.put("size", String.valueOf(compressedChunk.length));
+            queryParams.put("size", String.valueOf(compressedChunk.length - context.getBegin()));
 
-            OkHttpResponse response = OkHttpUtils.post(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams, compressedChunk);
+            OkHttpResponse response = OkHttpUtils.post(String.format(Constants.URLTemplate, context.getIp(), context.getPort(), Constants.ChunkData), queryParams,
+                    Arrays.copyOfRange(compressedChunk, (int)context.getBegin(), compressedChunk.length));
 
             if (response.getCode() / 100 == 2) {
                 success = true;

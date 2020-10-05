@@ -91,7 +91,7 @@ public class ConcurrentControlServiceImpl implements ConcurrentControlService {
     public void startUpload(String fileId) {
         uploadThreadCount.incrementAndGet();
         allocatedUploadThreadCount.decrementAndGet();
-        TransferStatus status = downloadControlMap.get(fileId);
+        TransferStatus status = uploadControlMap.get(fileId);
         status.concurrency.incrementAndGet();
         status.latestUpdate = new Date().getTime();
     }
@@ -109,7 +109,7 @@ public class ConcurrentControlServiceImpl implements ConcurrentControlService {
     public void endUpload(String fileId) {
         uploadThreadCount.decrementAndGet();
         allocatedUploadThreadCount.incrementAndGet();
-        TransferStatus status = downloadControlMap.get(fileId);
+        TransferStatus status = uploadControlMap.get(fileId);
         status.concurrency.decrementAndGet();
         status.latestUpdate = new Date().getTime();
     }
